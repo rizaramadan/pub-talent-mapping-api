@@ -153,7 +153,14 @@ export interface SubmitRow {
 async function submit(client: Client, args: SubmitArgs): Promise<SubmitRow | null> {
     const result = await client.query({
         text: submitQuery,
-        values: [args.userId, args.respon_1, args.respon_2, args.respon_3, args.respon_4, args.respon_5, args.respon_6, args.respon_7, args.respon_8, args.respon_9, args.respon_10, args.respon_11, args.respon_12, args.respon_13, args.respon_14, args.respon_15, args.respon_16, args.respon_17, args.respon_18, args.respon_19, args.respon_20, args.respon_21, args.respon_22, args.respon_23, args.respon_24, args.respon_25, args.respon_26, args.respon_27, args.respon_28, args.fullName],
+        values: [
+          args.userId, args.respon_1, args.respon_2, args.respon_3, args.respon_4, 
+          args.respon_5, args.respon_6, args.respon_7, args.respon_8, args.respon_9, args.respon_10, 
+          args.respon_11, args.respon_12, args.respon_13, args.respon_14, args.respon_15, args.respon_16, 
+          args.respon_17, args.respon_18, args.respon_19, args.respon_20, args.respon_21, args.respon_22,
+          args.respon_23, args.respon_24, args.respon_25, args.respon_26, args.respon_27, args.respon_28, 
+          args.fullName
+        ],
         rowMode: "array"
     });
     if (result.rows.length !== 1) {
