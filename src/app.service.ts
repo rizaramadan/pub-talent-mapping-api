@@ -1,14 +1,16 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { QueryArrayConfig, QueryArrayResult, Pool } from "pg";
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name)
   constructor(@Inject('DATABASE_POOL') private readonly pool: Pool) {}
 
   async getResult(userId: string): Promise<GetResultRow> {
     const client = await this.pool.connect();
     try {
       const result = await getResult(client, { userId });
+      this.logger.log(result);
       return result;
     } finally {
       client.release();
@@ -79,7 +81,21 @@ async function getResult(client: Client, args: GetResultArgs): Promise<GetResult
         rowMode: "array"
     });
     if (result.rows.length !== 1) {
-        return null;
+        return {
+            userId: '',
+            fullName: '',
+            finalResult: '',
+            personalityRoleName: '',
+            cluster: '',
+            outgoing: 0,
+            solitary: 0,
+            conceptual:0,
+            practical: 0,
+            empathetic: 0,
+            logical: 0,
+            organized: 0,
+            flexible: 0
+        };
     }
     const row = result.rows[0];
     return {
