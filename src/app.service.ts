@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { QueryArrayConfig, QueryArrayResult, Pool } from "pg";
+import { ApiProperty } from '@nestjs/swagger';
 
 @Injectable()
 export class AppService {
@@ -20,6 +21,7 @@ export class AppService {
   async submitResult(userId: string, body: SubmitArgs): Promise<SubmitRow> {
     const client = await this.pool.connect();
     try {
+      this.logger.log(body);
       const result = await submit(client,  body);
       return result;
     } finally {
@@ -129,36 +131,97 @@ INSERT INTO talent_mapping.user_submissions (
     $21, $22, $23, $24, $25, $26, $27, $28, $29, $30
 ) RETURNING user_id`;
 
-export interface SubmitArgs {
+
+
+export class SubmitArgs {
+    @ApiProperty({ description: 'The ID of the user' })
     userId: string;
+
+    @ApiProperty({ description: 'Response 1' })
     respon_1: string;
+
+    @ApiProperty({ description: 'Response 2' })
     respon_2: string;
+
+    @ApiProperty({ description: 'Response 3' })
     respon_3: string;
+
+    @ApiProperty({ description: 'Response 4' })
     respon_4: string;
+
+    @ApiProperty({ description: 'Response 5' })
     respon_5: string;
+
+    @ApiProperty({ description: 'Response 6' })
     respon_6: string;
+
+    @ApiProperty({ description: 'Response 7' })
     respon_7: string;
+
+    @ApiProperty({ description: 'Response 8' })
     respon_8: string;
+
+    @ApiProperty({ description: 'Response 9' })
     respon_9: string;
+
+    @ApiProperty({ description: 'Response 10' })
     respon_10: string;
+
+    @ApiProperty({ description: 'Response 11' })
     respon_11: string;
+
+    @ApiProperty({ description: 'Response 12' })
     respon_12: string;
+
+    @ApiProperty({ description: 'Response 13' })
     respon_13: string;
+
+    @ApiProperty({ description: 'Response 14' })
     respon_14: string;
+
+    @ApiProperty({ description: 'Response 15' })
     respon_15: string;
+
+    @ApiProperty({ description: 'Response 16' })
     respon_16: string;
+
+    @ApiProperty({ description: 'Response 17' })
     respon_17: string;
+
+    @ApiProperty({ description: 'Response 18' })
     respon_18: string;
+
+    @ApiProperty({ description: 'Response 19' })
     respon_19: string;
+
+    @ApiProperty({ description: 'Response 20' })
     respon_20: string;
+
+    @ApiProperty({ description: 'Response 21' })
     respon_21: string;
+
+    @ApiProperty({ description: 'Response 22' })
     respon_22: string;
+
+    @ApiProperty({ description: 'Response 23' })
     respon_23: string;
+
+    @ApiProperty({ description: 'Response 24' })
     respon_24: string;
+
+    @ApiProperty({ description: 'Response 25' })
     respon_25: string;
+
+    @ApiProperty({ description: 'Response 26' })
     respon_26: string;
+
+    @ApiProperty({ description: 'Response 27' })
     respon_27: string;
+
+    @ApiProperty({ description: 'Response 28' })
     respon_28: string;
+
+    @ApiProperty({ description: 'Full name of the user' })
     fullName: string;
 }
 
@@ -167,6 +230,7 @@ export interface SubmitRow {
 }
 
 async function submit(client: Client, args: SubmitArgs): Promise<SubmitRow | null> {
+
     const result = await client.query({
         text: submitQuery,
         values: [

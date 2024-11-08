@@ -6,7 +6,7 @@ import { Pool } from 'pg';
     {
       provide: 'DATABASE_POOL',
       useFactory: () => {
-        return new Pool({ connectionString: process.env['DATABASE_URL'] });
+        return new Pool({ connectionString: process.env.DATABASE_URL });
       },
     },
   ],
