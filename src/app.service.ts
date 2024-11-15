@@ -1,10 +1,10 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { QueryArrayConfig, QueryArrayResult, Pool } from "pg";
+import { QueryArrayConfig, QueryArrayResult, Pool } from 'pg';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Injectable()
 export class AppService {
-  private readonly logger = new Logger(AppService.name)
+  private readonly logger = new Logger(AppService.name);
   constructor(@Inject('DATABASE_POOL') private readonly pool: Pool) {}
 
   async getResult(userId: string): Promise<GetResultRow> {
@@ -22,7 +22,18 @@ export class AppService {
     const client = await this.pool.connect();
     try {
       this.logger.log(body);
-      const result = await submit(client,  body);
+      const result = await submit(client, body);
+      return result;
+    } finally {
+      client.release();
+    }
+  }
+
+  async countSubmission(userId: string): Promise<CountSubmissionRow> {
+    const client = await this.pool.connect();
+    try {
+      const result = await countSubmission(client, { userId });
+      this.logger.log(result);
       return result;
     } finally {
       client.release();
@@ -253,3 +264,30 @@ async function submit(client: Client, args: SubmitArgs): Promise<SubmitRow | nul
 }
 // end of section for Submit
 
+export const countSubmissionQuery = `-- name: CountSubmission :one
+SELECT COUNT(*)
+FROM talent_mapping.user_submissions
+WHERE user_id = $1 LIMIT 1`;
+
+export interface CountSubmissionArgs {
+    userId: string;
+}
+
+export interface CountSubmissionRow {
+    count: string;
+}
+
+export async function countSubmission(client: Client, args: CountSubmissionArgs): Promise<CountSubmissionRow | null> {
+    const result = await client.query({
+        text: countSubmissionQuery,
+        values: [args.userId],
+        rowMode: "array"
+    });
+    if (result.rows.length !== 1) {
+        return null;
+    }
+    const row = result.rows[0];
+    return {
+        count: row[0]
+    };
+}

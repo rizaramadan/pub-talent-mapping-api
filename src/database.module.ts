@@ -12,4 +12,4 @@ import { Pool } from 'pg';
   ],
   exports: ['DATABASE_POOL'],
 })
-export class DatabaseModule {} 
+export class DatabaseModule {}

@@ -19,8 +19,8 @@ SELECT
         logical,
         organized,
         flexible
-    FROM view_final_result v
-        left join personality_roles p on v.final_result = p.typology
+    FROM talent_mapping.view_final_result v
+        left join talent_mapping.personality_roles p on v.final_result = p.typology
     WHERE user_id =$1 LIMIT 1`;
 
 export interface GetResultArgs {
@@ -71,7 +71,7 @@ export async function getResult(client: Client, args: GetResultArgs): Promise<Ge
 }
 
 export const submitQuery = `-- name: Submit :one
-INSERT INTO user_submissions (
+INSERT INTO talent_mapping.user_submissions (
     user_id, respon_1, respon_2, respon_3, respon_4, respon_5, respon_6, respon_7, respon_8, respon_9, respon_10, 
     respon_11, respon_12, respon_13, respon_14, respon_15, respon_16, respon_17, respon_18, respon_19, respon_20, 
     respon_21, respon_22, respon_23, respon_24, respon_25, respon_26, respon_27, respon_28, full_name
@@ -119,7 +119,7 @@ export interface SubmitRow {
     userId: string;
 }
 
-async function submit(client: Client, args: SubmitArgs): Promise<SubmitRow | null> {
+export async function submit(client: Client, args: SubmitArgs): Promise<SubmitRow | null> {
     const result = await client.query({
         text: submitQuery,
         values: [args.userId, args.respon_1, args.respon_2, args.respon_3, args.respon_4, args.respon_5, args.respon_6, args.respon_7, args.respon_8, args.respon_9, args.respon_10, args.respon_11, args.respon_12, args.respon_13, args.respon_14, args.respon_15, args.respon_16, args.respon_17, args.respon_18, args.respon_19, args.respon_20, args.respon_21, args.respon_22, args.respon_23, args.respon_24, args.respon_25, args.respon_26, args.respon_27, args.respon_28, args.fullName],
@@ -131,6 +131,34 @@ async function submit(client: Client, args: SubmitArgs): Promise<SubmitRow | nul
     const row = result.rows[0];
     return {
         userId: row[0]
+    };
+}
+
+export const countSubmissionQuery = `-- name: CountSubmission :one
+SELECT COUNT(*)
+FROM talent_mapping.user_submissions
+WHERE user_id = $1 LIMIT 1`;
+
+export interface CountSubmissionArgs {
+    userId: string;
+}
+
+export interface CountSubmissionRow {
+    count: string;
+}
+
+export async function countSubmission(client: Client, args: CountSubmissionArgs): Promise<CountSubmissionRow | null> {
+    const result = await client.query({
+        text: countSubmissionQuery,
+        values: [args.userId],
+        rowMode: "array"
+    });
+    if (result.rows.length !== 1) {
+        return null;
+    }
+    const row = result.rows[0];
+    return {
+        count: row[0]
     };
 }
 

@@ -1,4 +1,6 @@
-CREATE TABLE view_final_result (
+create schema if not exists talent_mapping;
+
+CREATE TABLE talent_mapping.view_final_result (
     user_id VARCHAR(128) NOT NULL PRIMARY KEY,
     full_name TEXT NOT NULL,
     final_result VARCHAR(4) NOT NULL,
@@ -12,7 +14,7 @@ CREATE TABLE view_final_result (
     flexible INTEGER NOT NULL
 );
 
-create table user_submissions
+create table talent_mapping.user_submissions
 (
     user_id    varchar(128) not null,
     respon_1   char         not null,
@@ -47,7 +49,7 @@ create table user_submissions
     created_at timestamp default CURRENT_TIMESTAMP
 );
 
-create table personality_roles
+create table talent_mapping.personality_roles
 (
     typology              varchar(4)  not null
         primary key,

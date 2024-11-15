@@ -1,5 +1,11 @@
 import { Controller, Get, Param, Post, Body } from '@nestjs/common';
-import { AppService, GetResultRow, SubmitArgs, SubmitRow } from './app.service';
+import {
+  AppService,
+  GetResultRow,
+  SubmitArgs,
+  SubmitRow,
+  CountSubmissionRow,
+} from './app.service';
 import { ApiOperation, ApiParam, ApiBody } from '@nestjs/swagger';
 
 @Controller('api')
@@ -8,13 +14,26 @@ export class AppController {
 
   @Get('get-result/:userId')
   @ApiOperation({ summary: 'Get result by user ID' })
-  async getResult(@Param('userId') userId: string) : Promise<GetResultRow> {
+  async getResult(@Param('userId') userId: string): Promise<GetResultRow> {
     return this.appService.getResult(userId);
+  }
+
+  @Get('count-submission/:userId')
+  @ApiOperation({ summary: 'Count submission by user ID' })
+  async countSubmission(
+    @Param('userId') userId: string,
+  ): Promise<CountSubmissionRow> {
+    return this.appService.countSubmission(userId);
   }
 
   @Post('submit/:userId')
   @ApiOperation({ summary: 'Submit result by user ID' })
-  @ApiParam({ name: 'userId', required: true, description: 'The ID of the user', type: String })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'The ID of the user',
+    type: String,
+  })
   @ApiBody({ description: 'The data to submit', type: SubmitArgs })
   async submitResult(
     @Param('userId') userId: string,
